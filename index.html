@@ -16,6 +16,14 @@
       z-index: 10000;
       display: none;
     }
+    .custom-pointer {
+      position: fixed;
+      width: 32px;
+      height: 32px;
+      pointer-events: none;
+      z-index: 10000;
+      display: none;
+    }
     nav ul {
       list-style: none;
       padding: 0;
@@ -51,6 +59,7 @@
   <script>
     let cursorIndex = 0;
     let cursorImages = [];
+    let pointerImage = "";
     let cursorInterval;
 
     function setCursorStyle(style) {
@@ -60,12 +69,18 @@
         `assets/cursors/style${style}/style${style}-2.png`,
         `assets/cursors/style${style}/style${style}-3.png`
       ];
+      pointerImage = `assets/cursors/style${style}/pointer${style}.png`;
 
       const cursorElement = document.querySelector('.custom-cursor');
-      if (cursorInterval) clearInterval(cursorInterval);
-      cursorElement.style.display = 'block';
+      const pointerElement = document.querySelector('.custom-pointer');
 
-      // Animate the cursor
+      if (cursorInterval) clearInterval(cursorInterval);
+
+      cursorElement.style.display = 'block';
+      pointerElement.src = pointerImage;
+      pointerElement.style.display = 'none';
+
+      // Animate the arrow cursor
       cursorInterval = setInterval(() => {
         cursorElement.src = cursorImages[cursorIndex];
         cursorIndex = (cursorIndex + 1) % cursorImages.length;
@@ -75,13 +90,32 @@
     function removeCursorStyle() {
       clearInterval(cursorInterval);
       document.querySelector('.custom-cursor').style.display = 'none';
+      document.querySelector('.custom-pointer').style.display = 'none';
+      document.body.style.cursor = 'default';
     }
 
     // Update cursor position
     document.addEventListener('mousemove', (e) => {
       const cursorElement = document.querySelector('.custom-cursor');
-      cursorElement.style.left = `${e.pageX}px`;
-      cursorElement.style.top = `${e.pageY}px`;
+      const pointerElement = document.querySelector('.custom-pointer');
+      
+      // Check for hover state
+      const target = e.target;
+      if (target.tagName === 'A' || target.tagName === 'BUTTON') {
+        cursorElement.style.display = 'none';
+        pointerElement.style.left = `${e.pageX}px`;
+        pointerElement.style.top = `${e.pageY}px`;
+        pointerElement.style.display = 'block';
+      } else {
+        pointerElement.style.display = 'none';
+        cursorElement.style.left = `${e.pageX}px`;
+        cursorElement.style.top = `${e.pageY}px`;
+        cursorElement.style.display = 'block';
+      }
+    });
+
+    document.addEventListener('mouseleave', () => {
+      removeCursorStyle();
     });
 
     document.addEventListener('DOMContentLoaded', () => {
@@ -93,10 +127,14 @@
         });
       });
 
-      // Add custom cursor element
+      // Add custom cursor and pointer elements
       const cursorElement = document.createElement('img');
       cursorElement.className = 'custom-cursor';
       document.body.appendChild(cursorElement);
+
+      const pointerElement = document.createElement('img');
+      pointerElement.className = 'custom-pointer';
+      document.body.appendChild(pointerElement);
     });
   </script>
 </head>
