@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Hello!! 🥰</title>
+  <script>
+    let originalTitle = "Hello!! 🥰";
+    let inactiveTitles = ["I miss you!! 🥹", "Come back soon! 💖", "Don't forget me! 😢"];
+    let titleIndex = 0;
+    let titleInterval;
+
+    document.addEventListener("visibilitychange", () => {
+      if (document.hidden) {
+        // Start rotating titles when the tab is inactive
+        titleInterval = setInterval(() => {
+          document.title = inactiveTitles[titleIndex];
+          titleIndex = (titleIndex + 1) % inactiveTitles.length;
+        }, 1000); // Change title every 1 second
+      } else {
+        // Stop rotation and revert to the original title when the tab is active
+        clearInterval(titleInterval);
+        document.title = originalTitle;
+      }
+    });
+  </script>
+</head>
+<body>
+
+  <nav id="navmenu" class="navmenu">
+    <ul>
+      <li><a href="#" class="active"><i class="bi bi-house navicon"></i>Home</a></li>
+      <li class="dropdown"><a href="#"><i class="bi bi-menu-button navicon"></i> <span>Cursors Settings</span> <i class="bi bi-chevron-down toggle-dropdown"></i></a>
+        <ul>
+          <li><a value=1>Style 1</a></li>
+          <li><a value=2>Style 2</a></li>
+          <li><a value=3>Style 3</a></li>
+          <li><a value=4>Style 4</a></li>
+        </ul>
+      </li>
+    </ul>
+  </nav>
+  <h1>Welcome to my website!</h1>
+  <p>Switch tabs to see the titles change when inactive.</p>
+</body>
+</html>
