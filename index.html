@@ -84,7 +84,7 @@
       cursorInterval = setInterval(() => {
         cursorElement.src = cursorImages[cursorIndex];
         cursorIndex = (cursorIndex + 1) % cursorImages.length;
-      }, 150); // Change frame every 150ms
+      }, 250); // Change frame every 150ms
     }
 
     function removeCursorStyle() {
@@ -124,6 +124,7 @@
         item.addEventListener('click', (e) => {
           const style = e.target.getAttribute('value'); // Get the style value
           setCursorStyle(style); // Apply the selected cursor style
+          document.body.style.cursor = 'none';
         });
       });
 
