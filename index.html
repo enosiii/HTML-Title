@@ -4,38 +4,99 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Hello!! 🥰</title>
+  <style>
+    body {
+      cursor: none; /* Hide the default cursor */
+    }
+    .custom-cursor {
+      position: fixed;
+      width: 32px; /* Adjust size as needed */
+      height: 32px;
+      pointer-events: none;
+      z-index: 10000;
+      display: none;
+    }
+  </style>
   <script>
     let originalTitle = "Hello!! 🥰";
     let inactiveTitles = ["I miss you!! 🥹", "Come back soon! 💖", "Don't forget me! 😢"];
     let titleIndex = 0;
     let titleInterval;
 
+    // Title change logic
     document.addEventListener("visibilitychange", () => {
       if (document.hidden) {
-        // Start rotating titles when the tab is inactive
         titleInterval = setInterval(() => {
           document.title = inactiveTitles[titleIndex];
           titleIndex = (titleIndex + 1) % inactiveTitles.length;
-        }, 1000); // Change title every 1 second
+        }, 1000);
       } else {
-        // Stop rotation and revert to the original title when the tab is active
         clearInterval(titleInterval);
         document.title = originalTitle;
       }
     });
+
+    // Cursor animation logic
+    let cursorIndex = 0;
+    let cursorImages = [];
+    let cursorInterval;
+
+    function setCursorStyle(style) {
+      cursorIndex = 0;
+      cursorImages = [
+        `assets/cursors/style${style}/style${style}-1.png`,
+        `assets/cursors/style${style}/style${style}-2.png`,
+        `assets/cursors/style${style}/style${style}-3.png`
+      ];
+
+      const cursorElement = document.querySelector('.custom-cursor');
+      if (cursorInterval) clearInterval(cursorInterval);
+      cursorElement.style.display = 'block';
+
+      // Change cursor frame periodically
+      cursorInterval = setInterval(() => {
+        cursorElement.src = cursorImages[cursorIndex];
+        cursorIndex = (cursorIndex + 1) % cursorImages.length;
+      }, 150); // Change frame every 150ms
+    }
+
+    function removeCursorStyle() {
+      clearInterval(cursorInterval);
+      document.querySelector('.custom-cursor').style.display = 'none';
+    }
+
+    // Update cursor position
+    document.addEventListener('mousemove', (e) => {
+      const cursorElement = document.querySelector('.custom-cursor');
+      cursorElement.style.left = `${e.pageX}px`;
+      cursorElement.style.top = `${e.pageY}px`;
+    });
+
+    document.addEventListener('DOMContentLoaded', () => {
+      const cursorMenuItems = document.querySelectorAll('.dropdown ul li a');
+      cursorMenuItems.forEach((item, index) => {
+        item.addEventListener('click', () => {
+          setCursorStyle(index + 1); // Match style with menu index
+        });
+      });
+
+      // Add custom cursor element
+      const cursorElement = document.createElement('img');
+      cursorElement.className = 'custom-cursor';
+      document.body.appendChild(cursorElement);
+    });
   </script>
 </head>
 <body>
-
   <nav id="navmenu" class="navmenu">
     <ul>
       <li><a href="#" class="active"><i class="bi bi-house navicon"></i>Home</a></li>
       <li class="dropdown"><a href="#"><i class="bi bi-menu-button navicon"></i> <span>Cursors Settings</span> <i class="bi bi-chevron-down toggle-dropdown"></i></a>
         <ul>
-          <li><a value=1>Style 1</a></li>
-          <li><a value=2>Style 2</a></li>
-          <li><a value=3>Style 3</a></li>
-          <li><a value=4>Style 4</a></li>
+          <li><a value="1">Style 1</a></li>
+          <li><a value="2">Style 2</a></li>
+          <li><a value="3">Style 3</a></li>
+          <li><a value="4">Style 4</a></li>
         </ul>
       </li>
     </ul>
