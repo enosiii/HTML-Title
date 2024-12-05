@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Hello!! 🥰</title>
+  <style>
+    body {
+      cursor: none; /* Hide the default cursor */
+    }
+    .custom-cursor {
+      position: fixed;
+      width: 32px; /* Adjust size as needed */
+      height: 32px;
+      pointer-events: none;
+      z-index: 10000;
+      display: none;
+    }
+    nav ul {
+      list-style: none;
+      padding: 0;
+    }
+    nav ul li {
+      display: inline-block;
+      position: relative;
+    }
+    nav ul li ul {
+      display: none;
+      position: absolute;
+      background: #f0f0f0;
+      list-style: none;
+      padding: 10px;
+      margin: 0;
+      border: 1px solid #ccc;
+    }
+    nav ul li:hover ul {
+      display: block;
+    }
+    nav ul li ul li {
+      margin: 5px 0;
+    }
+    nav ul li ul li a {
+      text-decoration: none;
+      color: #000;
+      cursor: pointer;
+    }
+    nav ul li ul li a:hover {
+      text-decoration: underline;
+    }
+  </style>
+  <script>
+    let cursorIndex = 0;
+    let cursorImages = [];
+    let cursorInterval;
+
+    function setCursorStyle(style) {
+      cursorIndex = 0;
+      cursorImages = [
+        `assets/cursors/style${style}/style${style}-1.png`,
+        `assets/cursors/style${style}/style${style}-2.png`,
+        `assets/cursors/style${style}/style${style}-3.png`
+      ];
+
+      const cursorElement = document.querySelector('.custom-cursor');
+      if (cursorInterval) clearInterval(cursorInterval);
+      cursorElement.style.display = 'block';
+
+      // Animate the cursor
+      cursorInterval = setInterval(() => {
+        cursorElement.src = cursorImages[cursorIndex];
+        cursorIndex = (cursorIndex + 1) % cursorImages.length;
+      }, 150); // Change frame every 150ms
+    }
+
+    function removeCursorStyle() {
+      clearInterval(cursorInterval);
+      document.querySelector('.custom-cursor').style.display = 'none';
+    }
+
+    // Update cursor position
+    document.addEventListener('mousemove', (e) => {
+      const cursorElement = document.querySelector('.custom-cursor');
+      cursorElement.style.left = `${e.pageX}px`;
+      cursorElement.style.top = `${e.pageY}px`;
+    });
+
+    document.addEventListener('DOMContentLoaded', () => {
+      const cursorMenuItems = document.querySelectorAll('.dropdown ul li a');
+      cursorMenuItems.forEach((item) => {
+        item.addEventListener('click', (e) => {
+          const style = e.target.getAttribute('value'); // Get the style value
+          setCursorStyle(style); // Apply the selected cursor style
+        });
+      });
+
+      // Add custom cursor element
+      const cursorElement = document.createElement('img');
+      cursorElement.className = 'custom-cursor';
+      document.body.appendChild(cursorElement);
+    });
+  </script>
+</head>
+<body>
+  <nav id="navmenu" class="navmenu">
+    <ul>
+      <li><a href="#" class="active"><i class="bi bi-house navicon"></i> Home</a></li>
+      <li class="dropdown"><a href="#"><i class="bi bi-menu-button navicon"></i> <span>Cursors Settings</span> <i class="bi bi-chevron-down toggle-dropdown"></i></a>
+        <ul>
+          <li><a value="1">Style 1</a></li>
+          <li><a value="2">Style 2</a></li>
+          <li><a value="3">Style 3</a></li>
+          <li><a value="4">Style 4</a></li>
+        </ul>
+      </li>
+    </ul>
+  </nav>
+  <h1>Welcome to my website!</h1>
+  <p>Click on the styles under "Cursors Settings" to change the cursor animation.</p>
+</body>
+</html>
